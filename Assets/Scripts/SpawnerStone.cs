@@ -7,16 +7,16 @@ namespace Golf
         [SerializeField]
         private GameObject[] m_prefabs;
         
-        public void Spawn()
+        public GameObject Spawn()
         {
             GameObject prefab = GetRandomPrefab();
 
             if (prefab == null)
             {
-                return;
+                return null;
             }
 
-            Instantiate(prefab, transform.position, Quaternion.identity);
+            return Instantiate(prefab, transform.position, Quaternion.identity);
         }
 
         private GameObject GetRandomPrefab()

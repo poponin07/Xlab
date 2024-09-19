@@ -19,6 +19,8 @@ namespace Golf
         public int score = 0;
         public int hightScore = 0;
 
+        private List<GameObject> m_stones = new List<GameObject>();
+
         private void Start()
         {
             m_lastSpawnedTime = Time.time;
@@ -27,13 +29,12 @@ namespace Golf
 
         private void OnEnable()
         {
-            GameEvents.onCollisionStone += GameOver;
             GameEvents.onStickHit += OnStickHit;
+            score = 0;
         }
 
         private void OnDisable()
         {
-            GameEvents.onCollisionStone -= GameOver;
             GameEvents.onStickHit -= OnStickHit;
         }
 
@@ -41,7 +42,8 @@ namespace Golf
         {
             if (Time.time >= m_lastSpawnedTime + m_delay)
             {
-                m_spawnerStone.Spawn();
+                var stone = m_spawnerStone.Spawn();
+                m_stones.Add(stone);
                 m_lastSpawnedTime = Time.time;
                 
                 RefreshDelay();
@@ -54,12 +56,15 @@ namespace Golf
             hightScore = Math.Max(hightScore, score);
             Debug.Log($"Score:{score}  Hight score:{hightScore}");
         }
-        
-        private void GameOver()
+
+        public void ClearStones()
         {
-            Debug.Log("Game over!");
-            enabled = false;
+            foreach (var stone in m_stones)
+            {
+                Destroy(stone);
+            }
         }
+        
 
         private void RefreshDelay()
         {
